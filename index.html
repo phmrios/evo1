@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assistente de Evolução Médica</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Assistente de Evolução Médica (Web)</h1>
+        
+        <form id="evolution-form">
+
+            <div class="step" id="step-1">
+                <h2>Passo 1: Informações Gerais</h2>
+                <label for="nome">Nome Completo:</label>
+                <input type="text" id="nome" required>
+                
+                <label for="idade">Idade:</label>
+                <input type="number" id="idade" required>
+                
+                <label for="sexo">Sexo:</label>
+                <select id="sexo">
+                    <option value="Masculino">Masculino</option>
+                    <option value="Feminino">Feminino</option>
+                </select>
+                
+                <label for="leito">Leito:</label>
+                <input type="text" id="leito">
+                
+                <label for="motivo_internacao">P0 (Motivo da Internação):</label>
+                <input type="text" id="motivo_internacao" required>
+                
+                <label for="alergias">Alergias (deixe em branco se 'Nega'):</label>
+                <input type="text" id="alergias" placeholder="Ex: Dipirona, Penicilina">
+                
+                <button type="button" class="next-step" data-next="step-2">Próximo</button>
+            </div>
+
+            <div class="step hidden" id="step-2">
+                <h2>Passo 2: Lista de Problemas</h2>
+                <label for="problema_desc">Problema // Data de Início:</label>
+                <input type="text" id="problema_desc" placeholder="Ex: Hipertensão Arterial // 2010">
+                <button type="button" id="add-problema">Adicionar Problema</button>
+                
+                <p>Problemas Adicionados:</p>
+                <ul id="lista-problemas-ul">
+                    </ul>
+                <button type="button" class="next-step" data-next="step-3">Próximo</button>
+            </div>
+
+            <div class="step hidden" id="step-3">
+                <h2>Passo 3: Evolução (Queixa Principal)</h2>
+                <label for="dias_internado">Paciente internado há (dias):</label>
+                <input type="number" id="dias_internado">
+                
+                <label for="queixas_hoje">Queixas de hoje (deixe em branco para 'ausência de queixas'):</label>
+                <input type="text" id="queixas_hoje">
+
+                <label for="relato_de">Relato feito por:</label>
+                <select id="relato_de">
+                    <option value="Próprio paciente">Próprio paciente</option>
+                    <option value="Acompanhante/Familiar">Acompanhante/Familiar</option>
+                    <option value="Equipe de enfermagem">Equipe de enfermagem</option>
+                </select>
+                
+                <label for="evolucao_sintomas">Evolução dos sintomas:</label>
+                <select id="evolucao_sintomas">
+                    <option value="Melhora">Melhora</option>
+                    <option value="Piora">Piora</option>
+                    <option value="Manutenção">Manutenção</option>
+                    <option value="Ausência de sintomas prévios">Ausência de sintomas prévios</option>
+                </select>
+                
+                <label for="sintomas_descritos">Descrição dos Sintomas (ex: dor, febre):</label>
+                <input type="text" id="sintomas_descritos">
+                
+                <button type="button" class="next-step" data-next="step-4">Próximo</button>
+            </div>
+
+            <div class="step hidden" id="step-4">
+                <h2>Passo 4: Ao Exame Físico</h2>
+                
+                <label for="encontrado">Paciente encontrado:</label>
+                <select id="encontrado">
+                    <option value="Acordado">Acordado</option>
+                    <option value="Dormindo (desperta ao chamado)">Dormindo (desperta ao chamado)</option>
+                    <option value="Sedado">Sedado</option>
+                </select>
+
+                <label for="estado_geral">Estado Geral:</label>
+                <select id="estado_geral">
+                    <option value="Bom">Bom</option>
+                    <option value="Regular">Regular</option>
+                    <option value="Mau">Mau</option>
+                </select>
+
+                <label for="consciencia">Consciência:</label>
+                <select id="consciencia">
+                    <option value="Consciente">Consciente</option>
+                    <option value="Inconsciente">Inconsciente</option>
+                    <option value="Confuso/Sonolento">Confuso/Sonolento</option>
+                </select>
+
+                <label for="orientacao">Orientação:</label>
+                <select id="orientacao">
+                    <option value="Orientado em tempo e espaço">Orientado em tempo e espaço</option>
+                    <option value="Desorientado">Desorientado</option>
+                </select>
+
+                <h3>Sinais Vitais (SSVV)</h3>
+                <input type="text" id="pa" placeholder="PA (mmHg)">
+                <input type="text" id="fc" placeholder="FC (bpm)">
+                <input type="text" id="fr" placeholder="FR (irpm)">
+                <input type="text" id="temp" placeholder="Temp (°C)">
+                <input type="text" id="spo2" placeholder="SpO2 (%)">
+                <input type="text" id="diurese" placeholder="Diurese (mL/24h)">
+
+                <h3>Ausculta Pulmonar</h3>
+                <label for="ap_mv">Murmúrio Vesicular (MV):</label>
+                <select id="ap_mv">
+                    <option value="Presente">Presente</option>
+                    <option value="Diminuído">Diminuído</option>
+                    <option value="Abolido">Abolido</option>
+                </select>
+                
+                <label for="ap_ra_presente">Presença de Ruídos Adventícios (RA)?</label>
+                <select id="ap_ra_presente">
+                    <option value="Nao">Não</option>
+                    <option value="Sim">Sim</option>
+                </select>
+                
+                <div id="ap-ra-detalhes" class="hidden conditional-fields">
+                    <input type="text" id="ra_tipo" placeholder="Quais RAs? (Roncos, Sibilos, Estertores)">
+                    <input type="text" id="ra_local" placeholder="Onde? (Localização dos RAs)">
+                </div>
+                
+                <h3>Ausculta Cardíaca</h3>
+                <label for="ac_ritmo">Ritmo:</label>
+                <select id="ac_ritmo">
+                    <option value="Regular">Regular</option>
+                    <option value="Irregular">Irregular</option>
+                </select>
+                <label for="ac_bulhas">Bulhas:</label>
+                <select id="ac_bulhas">
+                    <option value="Normofonéticas">Normofonéticas</option>
+                    <option value="Hipofonéticas">Hipofonéticas</option>
+                    <option value="Presença de B3">Presença de B3</option>
+                    <option value="Presença de B4">Presença de B4</option>
+                </select>
+                
+                <label for="ac_sopros_presente">Presença de Sopros?</label>
+                <select id="ac_sopros_presente">
+                    <option value="Nao">Não</option>
+                    <option value="Sim">Sim</option>
+                </select>
+                <div id="ac-sopros-detalhes" class="hidden conditional-fields">
+                    <input type="text" id="ac_sopros_desc" placeholder="Descrição do Sopro (local, intensidade)">
+                </div>
+
+                <h3>Abdome</h3>
+                <label for="abd_estado">Estado do Abdome:</label>
+                <select id="abd_estado">
+                    <option value="Flácido, indolor">Flácido, indolor</option>
+                    <option value="Doloroso à palpação">Doloroso à palpação</option>
+                    <option value="Distendido">Distendido</option>
+                    <option value="Ascítico">Ascítico</option>
+                </select>
+                <div id="abdome-dor-detalhes" class="hidden conditional-fields">
+                    <input type="text" id="dor_local" placeholder="Onde é a dor?">
+                    <input type="text" id="dor_extra" placeholder="Mais achados? (ex: Descompressão+)">
+                </div>
+                
+                <label for="abd_rha">Ruídos Hidroaéreos (RHA):</label>
+                <select id="abd_rha">
+                    <option value="Presentes">Presentes</option>
+                    <option value="Hipoativos">Hipoativos</option>
+                    <option value="Ausentes">Ausentes</option>
+                </select>
+
+                <h3>Extremidades</h3>
+                <label for="ext_edemas_presente">Presença de Edemas?</label>
+                <select id="ext_edemas_presente">
+                    <option value="Nao">Não</option>
+                    <option value="Sim">Sim</option>
+                </select>
+                <div id="ext-edemas-detalhes" class="hidden conditional-fields">
+                    <input type="text" id="ext_edemas_desc" placeholder="Descrição do edema (ex: +/4+, bilateral)">
+                </div>
+                
+                <label for="ext_pulsos">Pulsos periféricos:</label>
+                <select id="ext_pulsos">
+                    <option value="Palpáveis e cheios">Palpáveis e cheios</option>
+                    <option value="Diminuídos">Diminuídos</option>
+                    <option value="Ausentes">Ausentes</option>
+                </select>
+                
+                <h3>Feridas/Curativos</h3>
+                <label for="feridas">Descrição (deixe em branco para o padrão):</label>
+                <input type="text" id="feridas" placeholder="Curativo limpo e seco em...">
+                
+                <button type="button" class="next-step" data-next="step-5">Próximo</button>
+            </div>
+
+            <div class="step hidden" id="step-5">
+                <h2>Passo 5: Dados Complementares</h2>
+                <label for="balanco_hidrico">Balanço Hídrico 24h (deixe em branco para omitir):</label>
+                <input type="text" id="balanco_hidrico">
+                
+                <label for="lab_imagem">Evolução laboratorial/imagem:</label>
+                <input type="text" id="lab_imagem">
+                
+                <label for="relato_enfermagem">Relato relevante da Enfermagem:</label>
+                <input type="text" id="relato_enfermagem">
+
+                <label for="aval_clinica">Avaliação clínica atual:</label>
+                <select id="aval_clinica">
+                    <option value="Favorável">Favorável</option>
+                    <option value="Estacionária">Estacionária</option>
+                    <option value="Desfavorável">Desfavorável</option>
+                </select>
+                
+                <button type="button" class="next-step" data-next="step-6">Próximo</button>
+            </div>
+            
+            <div class="step hidden" id="step-6">
+                <h2>Passo 6: Medicamentos em Uso</h2>
+                <input type="text" id="med_nome" placeholder="Nome do Medicamento">
+                <input type="text" id="med_dose_via" placeholder="Dose e Via (ex: 500mg VO 12/12h)">
+                <input type="text" id="med_data_inicio" placeholder="Data de Início (ou deixe em branco se hoje)">
+                <input type="text" id="med_dias_uso" placeholder="Dias de uso (ex: D1, 5/7)">
+                <button type="button" id="add-medicamento">Adicionar Medicamento</button>
+                
+                <p>Medicamentos Adicionados:</p>
+                <ul id="lista-medicamentos-ul">
+                    </ul>
+                <button type="button" class="next-step" data-next="step-7">Próximo</button>
+            </div>
+
+            <div class="step hidden" id="step-7">
+                <h2>Passo 7: Conduta / Plano</h2>
+                <label for="plano_manter">Manter:</label>
+                <input type="text" id="plano_manter" placeholder="ex: demais medicações, dieta, cuidados">
+                
+                <label for="plano_adicionar">Adicionar/Realizar:</label>
+                <input type="text" id="plano_adicionar" placeholder="ex: novos exames, pareceres">
+                
+                <label for="plano_ajustar">Ajustar:</label>
+                <input type="text" id="plano_ajustar" placeholder="ex: hidratação, analgesia, etc.">
+                
+                <label for="plano_programar">Programar:</label>
+                <input type="text" id="plano_programar" placeholder="ex: alta, procedimento, transferência">
+
+                <button type="button" id="generate-button">GERAR EVOLUÇÃO</button>
+            </div>
+
+        </form>
+
+        <div class="step hidden" id="step-8">
+            <h2>Resultado da Evolução</h2>
+            <textarea id="resultado-texto" rows="20" readonly></textarea>
+            <button type="button" id="copy-button">Copiar Texto</button>
+            <button type="button" id="restart-button">Começar Novamente</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
