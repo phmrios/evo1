@@ -36,7 +36,9 @@
                 <label for="alergias">Alergias (deixe em branco se 'Nega'):</label>
                 <input type="text" id="alergias" placeholder="Ex: Dipirona, Penicilina">
                 
-                <button type="button" class="next-step" data-next="step-2">Próximo</button>
+                <div class="buttons-container">
+                    <button type="button" class="next-step" data-next="step-2">Próximo</button>
+                </div>
             </div>
 
             <div class="step hidden" id="step-2">
@@ -46,9 +48,12 @@
                 <button type="button" id="add-problema">Adicionar Problema</button>
                 
                 <p>Problemas Adicionados:</p>
-                <ul id="lista-problemas-ul">
-                    </ul>
-                <button type="button" class="next-step" data-next="step-3">Próximo</button>
+                <ul id="lista-problemas-ul"></ul>
+
+                <div class="buttons-container">
+                    <button type="button" class="prev-step" data-prev="step-1">Voltar</button>
+                    <button type="button" class="next-step" data-next="step-3">Próximo</button>
+                </div>
             </div>
 
             <div class="step hidden" id="step-3">
@@ -77,7 +82,10 @@
                 <label for="sintomas_descritos">Descrição dos Sintomas (ex: dor, febre):</label>
                 <input type="text" id="sintomas_descritos">
                 
-                <button type="button" class="next-step" data-next="step-4">Próximo</button>
+                <div class="buttons-container">
+                    <button type="button" class="prev-step" data-prev="step-2">Voltar</button>
+                    <button type="button" class="next-step" data-next="step-4">Próximo</button>
+                </div>
             </div>
 
             <div class="step hidden" id="step-4">
@@ -201,7 +209,10 @@
                 <label for="feridas">Descrição (deixe em branco para o padrão):</label>
                 <input type="text" id="feridas" placeholder="Curativo limpo e seco em...">
                 
-                <button type="button" class="next-step" data-next="step-5">Próximo</button>
+                <div class="buttons-container">
+                    <button type="button" class="prev-step" data-prev="step-3">Voltar</button>
+                    <button type="button" class="next-step" data-next="step-5">Próximo</button>
+                </div>
             </div>
 
             <div class="step hidden" id="step-5">
@@ -222,7 +233,10 @@
                     <option value="Desfavorável">Desfavorável</option>
                 </select>
                 
-                <button type="button" class="next-step" data-next="step-6">Próximo</button>
+                <div class="buttons-container">
+                    <button type="button" class="prev-step" data-prev="step-4">Voltar</button>
+                    <button type="button" class="next-step" data-next="step-6">Próximo</button>
+                </div>
             </div>
             
             <div class="step hidden" id="step-6">
@@ -234,9 +248,12 @@
                 <button type="button" id="add-medicamento">Adicionar Medicamento</button>
                 
                 <p>Medicamentos Adicionados:</p>
-                <ul id="lista-medicamentos-ul">
-                    </ul>
-                <button type="button" class="next-step" data-next="step-7">Próximo</button>
+                <ul id="lista-medicamentos-ul"></ul>
+
+                <div class="buttons-container">
+                    <button type="button" class="prev-step" data-prev="step-5">Voltar</button>
+                    <button type="button" class="next-step" data-next="step-7">Próximo</button>
+                </div>
             </div>
 
             <div class="step hidden" id="step-7">
@@ -253,7 +270,10 @@
                 <label for="plano_programar">Programar:</label>
                 <input type="text" id="plano_programar" placeholder="ex: alta, procedimento, transferência">
 
-                <button type="button" id="generate-button">GERAR EVOLUÇÃO</button>
+                <div class="buttons-container">
+                    <button type="button" class="prev-step" data-prev="step-6">Voltar</button>
+                    <button type="button" id="generate-button">GERAR EVOLUÇÃO</button>
+                </div>
             </div>
 
         </form>
@@ -261,8 +281,11 @@
         <div class="step hidden" id="step-8">
             <h2>Resultado da Evolução</h2>
             <textarea id="resultado-texto" rows="20" readonly></textarea>
-            <button type="button" id="copy-button">Copiar Texto</button>
-            <button type="button" id="restart-button">Começar Novamente</button>
+            
+            <div class="buttons-container">
+                <button type="button" id="copy-button">Copiar Texto</button>
+                <button type="button" id="restart-button">Começar Novamente</button>
+            </div>
         </div>
     </div>
 

@@ -1,23 +1,32 @@
-// Espera o DOM (a página) carregar antes de executar o código
 document.addEventListener("DOMContentLoaded", function() {
 
     // --- ARMAZENAMENTO DAS LISTAS DINÂMICAS ---
-    // Precisamos guardar os problemas e medicamentos em arrays
     let problemasList = [];
     let medicamentosList = [];
 
-    // --- NAVEGAÇÃO ENTRE PASSOS (WIZARD) ---
-    // Pega todos os botões "Próximo"
+    // --- NAVEGAÇÃO ENTRE PASSOS (PRÓXIMO) ---
     const nextButtons = document.querySelectorAll('.next-step');
     nextButtons.forEach(button => {
         button.addEventListener('click', () => {
-            // Esconde o passo atual
-            const currentStep = button.closest('.step'); // Pega o 'div' pai da classe 'step'
-            currentStep.classList.add('hidden');
+            const currentStep = button.closest('.step');
+            const nextStepId = button.getAttribute('data-next');
             
-            // Mostra o próximo passo
-            const nextStepId = button.getAttribute('data-next'); // Pega o ID do próximo passo (ex: 'step-2')
+            currentStep.classList.add('hidden');
             document.getElementById(nextStepId).classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    });
+
+    // --- NAVEGAÇÃO ENTRE PASSOS (VOLTAR) ---
+    const prevButtons = document.querySelectorAll('.prev-step');
+    prevButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const currentStep = button.closest('.step');
+            const prevStepId = button.getAttribute('data-prev');
+            
+            currentStep.classList.add('hidden');
+            document.getElementById(prevStepId).classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     });
 
@@ -26,62 +35,79 @@ document.addEventListener("DOMContentLoaded", function() {
     // 1. Ausculta Pulmonar (RA)
     document.getElementById('ap_ra_presente').addEventListener('change', function() {
         const detalhesRA = document.getElementById('ap-ra-detalhes');
-        if (this.value === 'Sim') {
-            detalhesRA.classList.remove('hidden');
-        } else {
-            detalhesRA.classList.add('hidden');
-        }
+        if (this.value === 'Sim') detalhesRA.classList.remove('hidden');
+        else detalhesRA.classList.add('hidden');
     });
 
     // 2. Ausculta Cardíaca (Sopros)
     document.getElementById('ac_sopros_presente').addEventListener('change', function() {
         const detalhesSopros = document.getElementById('ac-sopros-detalhes');
-        if (this.value === 'Sim') {
-            detalhesSopros.classList.remove('hidden');
-        } else {
-            detalhesSopros.classList.add('hidden');
-        }
+        if (this.value === 'Sim') detalhesSopros.classList.remove('hidden');
+        else detalhesSopros.classList.add('hidden');
     });
 
     // 3. Abdome (Dor)
     document.getElementById('abd_estado').addEventListener('change', function() {
         const detalhesAbdome = document.getElementById('abdome-dor-detalhes');
-        if (this.value === 'Doloroso à palpação') {
-            detalhesAbdome.classList.remove('hidden');
-        } else {
-            detalhesAbdome.classList.add('hidden');
-        }
+        if (this.value === 'Doloroso à palpação') detalhesAbdome.classList.remove('hidden');
+        else detalhesAbdome.classList.add('hidden');
     });
 
     // 4. Extremidades (Edema)
     document.getElementById('ext_edemas_presente').addEventListener('change', function() {
         const detalhesEdema = document.getElementById('ext-edemas-detalhes');
-        if (this.value === 'Sim') {
-            detalhesEdema.classList.remove('hidden');
-        } else {
-            detalhesEdema.classList.add('hidden');
-        }
+        if (this.value === 'Sim') detalhesEdema.classList.remove('hidden');
+        else detalhesEdema.classList.add('hidden');
     });
+
+    // --- FUNÇÕES AUXILIARES PARA LISTAS (RENDERIZAR) ---
+    function renderList(listData, ulId, type) {
+        const ul = document.getElementById(ulId);
+        ul.innerHTML = ""; 
+
+        listData.forEach((item, index) => {
+            const li = document.createElement('li');
+            
+            const spanText = document.createElement('span');
+            spanText.textContent = item;
+            
+            const removeBtn = document.createElement('button');
+            removeBtn.textContent = "X";
+            removeBtn.className = "remove-btn";
+            removeBtn.setAttribute('title', 'Remover item');
+            
+            removeBtn.addEventListener('click', function() {
+                removeItem(index, type);
+            });
+
+            li.appendChild(spanText);
+            li.appendChild(removeBtn);
+            ul.appendChild(li);
+        });
+    }
+
+    function removeItem(index, type) {
+        if (type === 'problema') {
+            problemasList.splice(index, 1);
+            renderList(problemasList, 'lista-problemas-ul', 'problema');
+        } else if (type === 'medicamento') {
+            medicamentosList.splice(index, 1);
+            renderList(medicamentosList, 'lista-medicamentos-ul', 'medicamento');
+        }
+    }
 
     // --- LÓGICA DAS LISTAS DINÂMICAS ---
 
     // 1. Adicionar Problema
     document.getElementById('add-problema').addEventListener('click', function() {
         const problemaInput = document.getElementById('problema_desc');
-        const problemaTexto = problemaInput.value;
+        const problemaTexto = problemaInput.value.trim();
         
         if (problemaTexto) {
-            // Adiciona ao array de dados
             problemasList.push(problemaTexto);
-            
-            // Adiciona na lista da tela (UI)
-            const ul = document.getElementById('lista-problemas-ul');
-            const li = document.createElement('li');
-            li.textContent = problemaTexto;
-            ul.appendChild(li);
-            
-            // Limpa o campo
+            renderList(problemasList, 'lista-problemas-ul', 'problema');
             problemaInput.value = "";
+            problemaInput.focus();
         }
     });
 
@@ -89,26 +115,19 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById('add-medicamento').addEventListener('click', function() {
         const nome = document.getElementById('med_nome').value;
         const doseVia = document.getElementById('med_dose_via').value;
-        const dataInicio = document.getElementById('med_data_inicio').value || "Iniciado hoje"; // Default
+        const dataInicio = document.getElementById('med_data_inicio').value || "Iniciado hoje"; 
         const diasUso = document.getElementById('med_dias_uso').value;
         
         if (nome && doseVia && diasUso) {
             const medTexto = `Em uso de ${nome} (${doseVia}). ${dataInicio}. Dia ${diasUso} de uso.`;
-            
-            // Adiciona ao array de dados
             medicamentosList.push(medTexto);
+            renderList(medicamentosList, 'lista-medicamentos-ul', 'medicamento');
             
-            // Adiciona na lista da tela (UI)
-            const ul = document.getElementById('lista-medicamentos-ul');
-            const li = document.createElement('li');
-            li.textContent = medTexto;
-            ul.appendChild(li);
-            
-            // Limpa os campos
             document.getElementById('med_nome').value = "";
             document.getElementById('med_dose_via').value = "";
             document.getElementById('med_data_inicio').value = "";
             document.getElementById('med_dias_uso').value = "";
+            document.getElementById('med_nome').focus();
         } else {
             alert("Por favor, preencha Nome, Dose/Via e Dias de Uso.");
         }
@@ -121,11 +140,7 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('step-7').classList.add('hidden');
         document.getElementById('step-8').classList.remove('hidden');
         
-        // Coleta todos os dados dos campos (igual fizemos no Python)
-        // Usamos .value para pegar o texto de um campo.
-        // Usamos '|| valor_padrao' para tratar campos vazios.
-        
-        // Função auxiliar para pegar valor
+        // --- COLETA DOS DADOS ---
         const getVal = (id) => document.getElementById(id).value;
         const getValPadrao = (id, padrao) => document.getElementById(id).value || padrao;
 
@@ -141,7 +156,7 @@ document.addEventListener("DOMContentLoaded", function() {
             alergias = `ALERTA: ${alergias}`;
         }
         
-        // 2. Lista de Problemas (processa o array)
+        // 2. Lista de Problemas
         let textoProblemas = "";
         if (problemasList.length > 0) {
             problemasList.forEach((problema, index) => {
@@ -171,7 +186,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const spo2 = getValPadrao('spo2', '[N/A]');
         const diurese = getValPadrao('diurese', '[N/A]');
         
-        // Lógica AP (Ausculta Pulmonar)
+        // AP
         const apMv = getVal('ap_mv');
         let apRa = "";
         if (getVal('ap_ra_presente') === 'Sim') {
@@ -182,7 +197,7 @@ document.addEventListener("DOMContentLoaded", function() {
             apRa = "sem Ruídos Adventícios";
         }
         
-        // Lógica AC (Ausculta Cardíaca)
+        // AC
         const acRitmo = getVal('ac_ritmo');
         const acBulhas = getVal('ac_bulhas');
         let acSopros = "";
@@ -192,7 +207,7 @@ document.addEventListener("DOMContentLoaded", function() {
             acSopros = "sem sopros";
         }
 
-        // Lógica Abdome
+        // Abdome
         let abdEstado = getVal('abd_estado');
         if (abdEstado === 'Doloroso à palpação') {
             const dorLocal = getVal('dor_local');
@@ -201,7 +216,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         const abdRha = getVal('abd_rha');
 
-        // Lógica Extremidades
+        // Extremidades
         let extEdemas = "";
         if (getVal('ext_edemas_presente') === 'Sim') {
             extEdemas = `com edemas (${getVal('ext_edemas_desc')})`;
@@ -218,10 +233,9 @@ document.addEventListener("DOMContentLoaded", function() {
         const relatoEnfermagem = getValPadrao('relato_enfermagem', 'Sem intercorrências.');
         const avalClinica = getVal('aval_clinica');
         
-        // Lógica Balanço Hídrico (Omitir se vazio)
         const linhaBH = balancoHidrico ? `Balanço hídrico nas últimas 24h: ${balancoHidrico}.\n` : "";
 
-        // Lógica Medicamentos (processa o array)
+        // Medicamentos
         let textoMedicamentos = "";
         if (medicamentosList.length > 0) {
             medicamentosList.forEach(med => {
@@ -238,8 +252,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const planoAjustar = getValPadrao('plano_ajustar', 'Nenhum.');
         const planoProgramar = getValPadrao('plano_programar', 'Nenhum.');
 
-        // --- MONTAGEM DO TEXTO FINAL (O f-string do Python vira um "Template Literal" do JS) ---
-        
+        // --- MONTAGEM DO TEXTO FINAL ---
         const evolucaoFinal = `
 ---Informações Gerais---
 Data e Hora: ${dataHora}
@@ -276,24 +289,24 @@ Programar: ${planoProgramar}.
 Reavaliar diariamente evolução clínica e laboratorial.
 `;
 
-        // Coloca o texto final na caixa de texto, em MAIÚSCULAS
+        // INSERE O TEXTO NA CAIXA
         document.getElementById('resultado-texto').value = evolucaoFinal.trim().toUpperCase();
+        
+        // SCROLL PARA O TOPO PARA VER O RESULTADO
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
-    // --- BOTÕES FINAIS (Copiar e Recomeçar) ---
-
-    // Botão Copiar
+    // --- BOTÕES FINAIS ---
     document.getElementById('copy-button').addEventListener('click', function() {
         const resultadoTexto = document.getElementById('resultado-texto');
-        resultadoTexto.select(); // Seleciona o texto
-        document.execCommand('copy'); // Copia (método antigo, mas robusto)
-        // ou navigator.clipboard.writeText(resultadoTexto.value); (método moderno)
+        resultadoTexto.select(); 
+        document.execCommand('copy'); 
         alert('Texto copiado para a área de transferência!');
     });
 
-    // Botão Recomeçar
     document.getElementById('restart-button').addEventListener('click', function() {
-        // Recarrega a página, limpando tudo
-        location.reload();
+        if(confirm("Tem certeza? Todos os dados serão perdidos.")) {
+            location.reload();
+        }
     });
 });

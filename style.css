@@ -102,6 +102,78 @@ button:hover {
 #copy-button:hover { background-color: #117a65; }
 #restart-button:hover { background-color: #7f8c8d; }
 
+:root {
+    /* Definição de cores globais - facilita a troca de temas */
+    --primary-color: #3498db;
+    --primary-hover: #2980b9;
+    --success-color: #2ecc71;
+    --success-hover: #27ae60;
+    --danger-color: #e74c3c; /* Cor para remover/cancelar */
+    --text-color: #333;
+    --bg-color: #f4f7f6;
+}
+
+body {
+    /* ... (resto do teu código body) ... */
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+/* ... (mantém o teu código de container, h1, h2, inputs...) ... */
+
+/* Atualiza os botões para usar variáveis */
+button {
+    background-color: var(--primary-color);
+    /* ... (resto do estilo button) ... */
+}
+
+button:hover {
+    background-color: var(--primary-hover);
+}
+
+/* Botão de Adicionar */
+#add-problema, #add-medicamento {
+    background-color: var(--success-color);
+}
+#add-problema:hover, #add-medicamento:hover {
+    background-color: var(--success-hover);
+}
+
+/* NOVO: Botão Voltar (Estilo Secundário) */
+.prev-step {
+    background-color: #95a5a6;
+    margin-right: 10px;
+}
+.prev-step:hover {
+    background-color: #7f8c8d;
+}
+
+/* NOVO: Botão de Remover Item da Lista */
+.remove-btn {
+    background-color: var(--danger-color);
+    color: white;
+    border: none;
+    padding: 2px 8px;
+    margin-left: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8em;
+}
+.remove-btn:hover {
+    background-color: #c0392b;
+}
+
+/* Ajuste na lista para alinhar o botão */
+li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    padding: 5px 10px;
+    margin-bottom: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
 
 /* Listas de itens adicionados */
 ul {
